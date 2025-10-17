@@ -4,20 +4,17 @@ import { Bell, Filter, Trash2, MapPin, Clock, AlertTriangle } from 'lucide-react
 import { useGeofenceStore } from '../stores/geofenceStore'
 import { formatDistanceToNow, format } from 'date-fns'
 
-type FilterType = 'all' | 'enter' | 'exit'
-type TimeFilter = 'all' | 'today' | 'week' | 'month'
-
-export const AlertHistory: React.FC = () => {
+export const AlertHistory = () => {
   const { alerts, geofences, clearAlerts } = useGeofenceStore()
-  const [typeFilter, setTypeFilter] = useState<FilterType>('all')
-  const [timeFilter, setTimeFilter] = useState<TimeFilter>('all')
+  const [typeFilter, setTypeFilter] = useState('all')
+  const [timeFilter, setTimeFilter] = useState('all')
 
-  const getGeofenceName = (geofenceId: string) => {
+  const getGeofenceName = (geofenceId) => {
     const geofence = geofences.find(gf => gf.id === geofenceId)
     return geofence?.name || 'Unknown Geofence'
   }
 
-  const getGeofenceColor = (geofenceId: string) => {
+  const getGeofenceColor = (geofenceId) => {
     const geofence = geofences.find(gf => gf.id === geofenceId)
     return geofence?.color || '#6b7280'
   }
@@ -47,16 +44,16 @@ export const AlertHistory: React.FC = () => {
   })
 
   const typeFilters = [
-    { id: 'all' as FilterType, label: 'All Alerts', icon: Bell },
-    { id: 'enter' as FilterType, label: 'Enter Events', icon: MapPin },
-    { id: 'exit' as FilterType, label: 'Exit Events', icon: AlertTriangle },
+    { id: 'all', label: 'All Alerts', icon: Bell },
+    { id: 'enter', label: 'Enter Events', icon: MapPin },
+    { id: 'exit', label: 'Exit Events', icon: AlertTriangle },
   ]
 
   const timeFilters = [
-    { id: 'all' as TimeFilter, label: 'All Time' },
-    { id: 'today' as TimeFilter, label: 'Today' },
-    { id: 'week' as TimeFilter, label: 'This Week' },
-    { id: 'month' as TimeFilter, label: 'This Month' },
+    { id: 'all', label: 'All Time' },
+    { id: 'today', label: 'Today' },
+    { id: 'week', label: 'This Week' },
+    { id: 'month', label: 'This Month' },
   ]
 
   return (

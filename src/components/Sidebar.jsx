@@ -1,23 +1,8 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Play, Square, Plus } from 'lucide-react'
-import { Geofence, TabType } from '../types'
 
-interface Tab {
-  id: TabType
-  label: string
-  icon: React.ComponentType<{ className?: string }>
-}
-
-interface SidebarProps {
-  tabs: Tab[]
-  activeTab: TabType
-  onTabChange: (tab: TabType) => void
-  isTracking: boolean
-  onToggleTracking: () => void
-}
-
-export const Sidebar: React.FC<SidebarProps> = ({
+export const Sidebar = ({
   tabs,
   activeTab,
   onTabChange,

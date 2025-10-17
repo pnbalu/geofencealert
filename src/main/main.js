@@ -2,9 +2,9 @@ import { app, BrowserWindow, ipcMain, dialog, Notification } from 'electron'
 import { join } from 'path'
 import { readFileSync, writeFileSync, existsSync } from 'fs'
 
-let mainWindow: BrowserWindow
+let mainWindow
 
-const createWindow = (): void => {
+const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -77,7 +77,7 @@ ipcMain.handle('save-geofences', (_, data) => {
   }
 })
 
-ipcMain.handle('show-notification', (_, title: string, body: string) => {
+ipcMain.handle('show-notification', (_, title, body) => {
   if (Notification.isSupported()) {
     new Notification({
       title,

@@ -5,7 +5,7 @@ import { useGeofenceStore } from '../stores/geofenceStore'
 import { useLocationStore } from '../stores/locationStore'
 import { formatDistanceToNow } from 'date-fns'
 
-export const Dashboard: React.FC = () => {
+export const Dashboard = () => {
   const { geofences, alerts } = useGeofenceStore()
   const { currentLocation, isTracking, lastUpdate } = useLocationStore()
 

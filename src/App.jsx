@@ -13,10 +13,8 @@ import { Header } from './components/Header'
 import { Sidebar } from './components/Sidebar'
 import { Dashboard } from './components/Dashboard'
 
-type TabType = 'dashboard' | 'geofences' | 'alerts' | 'settings'
-
 function App() {
-  const [activeTab, setActiveTab] = useState<TabType>('dashboard')
+  const [activeTab, setActiveTab] = useState('dashboard')
   const [sidebarOpen, setSidebarOpen] = useState(true)
   
   const { loadGeofences } = useGeofenceStore()
@@ -31,10 +29,10 @@ function App() {
   }, [loadGeofences])
 
   const tabs = [
-    { id: 'dashboard' as TabType, label: 'Dashboard', icon: Activity },
-    { id: 'geofences' as TabType, label: 'Geofences', icon: MapPin },
-    { id: 'alerts' as TabType, label: 'Alerts', icon: Bell },
-    { id: 'settings' as TabType, label: 'Settings', icon: Settings },
+    { id: 'dashboard', label: 'Dashboard', icon: Activity },
+    { id: 'geofences', label: 'Geofences', icon: MapPin },
+    { id: 'alerts', label: 'Alerts', icon: Bell },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ]
 
   const renderContent = () => {

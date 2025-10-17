@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useLocationStore } from '../stores/locationStore'
 import { useGeofenceStore } from '../stores/geofenceStore'
 
-export const LocationTracker: React.FC = () => {
+export const LocationTracker = () => {
   const { currentLocation, isTracking } = useLocationStore()
   const { geofences, addAlert } = useGeofenceStore()
 
@@ -63,7 +63,7 @@ export const LocationTracker: React.FC = () => {
 }
 
 // Haversine formula to calculate distance between two points
-function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371e3 // Earth's radius in meters
   const φ1 = lat1 * Math.PI / 180
   const φ2 = lat2 * Math.PI / 180

@@ -3,14 +3,9 @@ import { motion } from 'framer-motion'
 import { X, MapPin, Save } from 'lucide-react'
 import { useGeofenceStore } from '../stores/geofenceStore'
 import { useLocationStore } from '../stores/locationStore'
-import { GEOFENCE_TYPES, Geofence } from '../types'
+import { GEOFENCE_TYPES } from '../constants'
 
-interface GeofenceFormProps {
-  geofence?: Geofence | null
-  onClose: () => void
-}
-
-export const GeofenceForm: React.FC<GeofenceFormProps> = ({ geofence, onClose }) => {
+export const GeofenceForm = ({ geofence, onClose }) => {
   const { addGeofence, updateGeofence } = useGeofenceStore()
   const { currentLocation } = useLocationStore()
   
@@ -19,7 +14,7 @@ export const GeofenceForm: React.FC<GeofenceFormProps> = ({ geofence, onClose })
     latitude: 0,
     longitude: 0,
     radius: 100,
-    type: 'custom' as const,
+      type: 'custom',
     color: '#3b82f6',
     enabled: true,
   })
@@ -44,7 +39,7 @@ export const GeofenceForm: React.FC<GeofenceFormProps> = ({ geofence, onClose })
     }
   }, [geofence, currentLocation])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     
     if (geofence) {
@@ -56,12 +51,12 @@ export const GeofenceForm: React.FC<GeofenceFormProps> = ({ geofence, onClose })
     onClose()
   }
 
-  const handleTypeChange = (type: string) => {
+  const handleTypeChange = (type) => {
     const typeConfig = GEOFENCE_TYPES.find(t => t.id === type)
     if (typeConfig) {
       setFormData(prev => ({
         ...prev,
-        type: type as any,
+        type: type,
         color: typeConfig.color,
         radius: typeConfig.defaultRadius,
       }))

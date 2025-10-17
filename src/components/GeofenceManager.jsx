@@ -3,15 +3,15 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Edit, Trash2, MapPin, ToggleLeft, ToggleRight } from 'lucide-react'
 import { useGeofenceStore } from '../stores/geofenceStore'
 import { GeofenceForm } from './GeofenceForm'
-import { GEOFENCE_TYPES } from '../types'
+import { GEOFENCE_TYPES } from '../constants'
 import { formatDistanceToNow } from 'date-fns'
 
-export const GeofenceManager: React.FC = () => {
+export const GeofenceManager = () => {
   const { geofences, deleteGeofence, toggleGeofence, selectGeofence, selectedGeofence } = useGeofenceStore()
   const [showForm, setShowForm] = useState(false)
-  const [editingGeofence, setEditingGeofence] = useState<any>(null)
+  const [editingGeofence, setEditingGeofence] = useState(null)
 
-  const handleEdit = (geofence: any) => {
+  const handleEdit = (geofence) => {
     setEditingGeofence(geofence)
     setShowForm(true)
   }
@@ -21,7 +21,7 @@ export const GeofenceManager: React.FC = () => {
     setEditingGeofence(null)
   }
 
-  const getGeofenceType = (type: string) => {
+  const getGeofenceType = (type) => {
     return GEOFENCE_TYPES.find(t => t.id === type) || GEOFENCE_TYPES[3]
   }
 

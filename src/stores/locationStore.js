@@ -1,20 +1,6 @@
 import { create } from 'zustand'
-import { Location } from '../types'
 
-interface LocationState {
-  currentLocation: Location | null
-  isTracking: boolean
-  trackingInterval: NodeJS.Timeout | null
-  lastUpdate: number
-  
-  // Actions
-  startTracking: () => void
-  stopTracking: () => void
-  updateLocation: (location: Location) => void
-  setTrackingInterval: (interval: number) => void
-}
-
-export const useLocationStore = create<LocationState>((set, get) => ({
+export const useLocationStore = create((set, get) => ({
   currentLocation: null,
   isTracking: false,
   trackingInterval: null,

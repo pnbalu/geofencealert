@@ -3,12 +3,7 @@ import { motion } from 'framer-motion'
 import { Menu, MapPin, Wifi, WifiOff } from 'lucide-react'
 import { useLocationStore } from '../stores/locationStore'
 
-interface HeaderProps {
-  onToggleSidebar: () => void
-  sidebarOpen: boolean
-}
-
-export const Header: React.FC<HeaderProps> = ({ onToggleSidebar, sidebarOpen }) => {
+export const Header = ({ onToggleSidebar, sidebarOpen }) => {
   const { currentLocation, isTracking } = useLocationStore()
 
   return (

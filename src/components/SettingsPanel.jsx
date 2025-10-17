@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Settings, Save, RotateCcw, MapPin, Bell, Clock, Shield } from 'lucide-react'
 import { useLocationStore } from '../stores/locationStore'
 
-export const SettingsPanel: React.FC = () => {
+export const SettingsPanel = () => {
   const { setTrackingInterval } = useLocationStore()
   const [settings, setSettings] = useState({
     trackingInterval: 5000, // 5 seconds
@@ -57,20 +57,20 @@ export const SettingsPanel: React.FC = () => {
           key: 'trackingInterval',
           label: 'Update Interval',
           description: 'How often to check for location updates',
-          type: 'select' as const,
+            type: 'select',
           options: trackingIntervals,
         },
         {
           key: 'highAccuracy',
           label: 'High Accuracy Mode',
           description: 'Use GPS for more precise location data',
-          type: 'toggle' as const,
+          type: 'toggle',
         },
         {
           key: 'timeout',
           label: 'Location Timeout',
           description: 'Maximum time to wait for location data (ms)',
-          type: 'number' as const,
+          type: 'number',
           min: 1000,
           max: 60000,
           step: 1000,
@@ -79,7 +79,7 @@ export const SettingsPanel: React.FC = () => {
           key: 'maximumAge',
           label: 'Maximum Age',
           description: 'Maximum age of cached location data (ms)',
-          type: 'number' as const,
+          type: 'number',
           min: 0,
           max: 3600000,
           step: 60000,
@@ -94,13 +94,13 @@ export const SettingsPanel: React.FC = () => {
           key: 'enableNotifications',
           label: 'Enable Notifications',
           description: 'Show desktop notifications for geofence events',
-          type: 'toggle' as const,
+          type: 'toggle',
         },
         {
           key: 'enableSound',
           label: 'Enable Sound',
           description: 'Play sound when notifications appear',
-          type: 'toggle' as const,
+          type: 'toggle',
         },
       ],
     },
@@ -112,7 +112,7 @@ export const SettingsPanel: React.FC = () => {
           key: 'autoStartTracking',
           label: 'Auto-start Tracking',
           description: 'Automatically start location tracking when app opens',
-          type: 'toggle' as const,
+          type: 'toggle',
         },
       ],
     },
@@ -192,17 +192,17 @@ export const SettingsPanel: React.FC = () => {
                         <button
                           onClick={() => setSettings(prev => ({
                             ...prev,
-                            [setting.key]: !prev[setting.key as keyof typeof prev]
+                              [setting.key]: !prev[setting.key]
                           }))}
                           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                            settings[setting.key as keyof typeof settings]
+                            settings[setting.key]
                               ? 'bg-primary-600'
                               : 'bg-gray-200 dark:bg-gray-700'
                           }`}
                         >
                           <span
                             className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                              settings[setting.key as keyof typeof settings]
+                              settings[setting.key]
                                 ? 'translate-x-6'
                                 : 'translate-x-1'
                             }`}
@@ -212,7 +212,7 @@ export const SettingsPanel: React.FC = () => {
 
                       {setting.type === 'select' && (
                         <select
-                          value={settings[setting.key as keyof typeof settings]}
+                          value={settings[setting.key]}
                           onChange={(e) => setSettings(prev => ({
                             ...prev,
                             [setting.key]: parseInt(e.target.value)
@@ -233,7 +233,7 @@ export const SettingsPanel: React.FC = () => {
                           min={setting.min}
                           max={setting.max}
                           step={setting.step}
-                          value={settings[setting.key as keyof typeof settings]}
+                          value={settings[setting.key]}
                           onChange={(e) => setSettings(prev => ({
                             ...prev,
                             [setting.key]: parseInt(e.target.value)

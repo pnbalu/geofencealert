@@ -1,27 +1,8 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import toast from 'react-hot-toast'
-import { Geofence, GeofenceData, Alert } from '../types'
 
-interface GeofenceState {
-  geofences: Geofence[]
-  alerts: Alert[]
-  selectedGeofence: Geofence | null
-  isLoading: boolean
-  
-  // Actions
-  loadGeofences: () => Promise<void>
-  saveGeofences: () => Promise<void>
-  addGeofence: (geofence: Omit<Geofence, 'id' | 'createdAt'>) => void
-  updateGeofence: (id: string, updates: Partial<Geofence>) => void
-  deleteGeofence: (id: string) => void
-  selectGeofence: (geofence: Geofence | null) => void
-  addAlert: (alert: Omit<Alert, 'id'>) => void
-  clearAlerts: () => void
-  toggleGeofence: (id: string) => void
-}
-
-export const useGeofenceStore = create<GeofenceState>()(
+export const useGeofenceStore = create(
   persist(
     (set, get) => ({
       geofences: [],
@@ -62,7 +43,7 @@ export const useGeofenceStore = create<GeofenceState>()(
       },
 
       addGeofence: (geofenceData) => {
-        const newGeofence: Geofence = {
+        const newGeofence = {
           ...geofenceData,
           id: crypto.randomUUID(),
           createdAt: new Date().toISOString(),
@@ -103,7 +84,7 @@ export const useGeofenceStore = create<GeofenceState>()(
       },
 
       addAlert: (alertData) => {
-        const newAlert: Alert = {
+        const newAlert = {
           ...alertData,
           id: crypto.randomUUID(),
         }
