@@ -121,28 +121,46 @@ export const GeofenceForm = ({ geofence, onClose }) => {
   }
 
   const handleMapPolygonChange = (polygonPoints) => {
-    const polygonData = polygonPoints.map(point => ({
-      latitude: point[0],
-      longitude: point[1]
-    }))
-    
-    setFormData(prev => ({
-      ...prev,
-      polygon: polygonData
-    }))
+    try {
+      if (!Array.isArray(polygonPoints)) return
+      
+      const polygonData = polygonPoints
+        .filter(point => Array.isArray(point) && point.length >= 2)
+        .map(point => ({
+          latitude: point[0],
+          longitude: point[1]
+        }))
+      
+      setFormData(prev => ({
+        ...prev,
+        polygon: polygonData
+      }))
+    } catch (error) {
+      console.error('Error handling polygon change:', error)
+    }
   }
 
   const handleMapCenterChange = (center) => {
-    setMapCenter(center)
-    setFormData(prev => ({
-      ...prev,
-      latitude: center[0],
-      longitude: center[1]
-    }))
+    try {
+      if (!Array.isArray(center) || center.length < 2) return
+      
+      setMapCenter(center)
+      setFormData(prev => ({
+        ...prev,
+        latitude: center[0],
+        longitude: center[1]
+      }))
+    } catch (error) {
+      console.error('Error handling center change:', error)
+    }
   }
 
   const handleMapDrawingToggle = (isDrawing) => {
-    setIsMapDrawing(isDrawing)
+    try {
+      setIsMapDrawing(Boolean(isDrawing))
+    } catch (error) {
+      console.error('Error handling drawing toggle:', error)
+    }
   }
 
   const useCurrentLocation = () => {
@@ -305,15 +323,26 @@ export const GeofenceForm = ({ geofence, onClose }) => {
 
               {/* Interactive Map */}
               <div>
-                <GeofenceMap
-                  center={mapCenter}
-                  zoom={13}
-                  polygon={formData.polygon.map(point => [point.latitude, point.longitude])}
-                  onPolygonChange={handleMapPolygonChange}
-                  onCenterChange={handleMapCenterChange}
-                  isDrawing={isMapDrawing}
-                  onToggleDrawing={handleMapDrawingToggle}
-                />
+                {Array.isArray(mapCenter) && mapCenter.length === 2 ? (
+                  <GeofenceMap
+                    center={mapCenter}
+                    zoom={13}
+                    polygon={formData.polygon
+                      .filter(point => point && typeof point.latitude === 'number' && typeof point.longitude === 'number')
+                      .map(point => [point.latitude, point.longitude])}
+                    onPolygonChange={handleMapPolygonChange}
+                    onCenterChange={handleMapCenterChange}
+                    isDrawing={isMapDrawing}
+                    onToggleDrawing={handleMapDrawingToggle}
+                  />
+                ) : (
+                  <div className="h-96 w-full rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center bg-slate-50 dark:bg-slate-800">
+                    <div className="text-center">
+                      <MapPin className="w-12 h-12 text-slate-400 mx-auto mb-2" />
+                      <p className="text-slate-500 dark:text-slate-400">Loading map...</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Manual Polygon Points (Alternative) */}

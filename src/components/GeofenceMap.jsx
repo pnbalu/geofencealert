@@ -34,10 +34,19 @@ export const GeofenceMap = ({
   isDrawing = false,
   onToggleDrawing
 }) => {
-  const [mapCenter, setMapCenter] = useState(center)
-  const [mapZoom, setMapZoom] = useState(zoom)
-  const [currentPolygon, setCurrentPolygon] = useState(polygon)
-  const [isMapDrawing, setIsMapDrawing] = useState(isDrawing)
+  // Ensure we have valid default values
+  const safeCenter = Array.isArray(center) && center.length === 2 && 
+    typeof center[0] === 'number' && typeof center[1] === 'number' 
+    ? center 
+    : [37.7749, -122.4194]
+  
+  const safeZoom = typeof zoom === 'number' && zoom > 0 ? zoom : 13
+  const safePolygon = Array.isArray(polygon) ? polygon : []
+  
+  const [mapCenter, setMapCenter] = useState(safeCenter)
+  const [mapZoom, setMapZoom] = useState(safeZoom)
+  const [currentPolygon, setCurrentPolygon] = useState(safePolygon)
+  const [isMapDrawing, setIsMapDrawing] = useState(Boolean(isDrawing))
   const mapRef = useRef()
 
   useEffect(() => {
@@ -49,44 +58,79 @@ export const GeofenceMap = ({
   }, [center])
 
   const handleMapClick = (latlng) => {
-    if (!isMapDrawing) return
+    if (!isMapDrawing || !latlng) return
     
-    const newPoint = [latlng.lat, latlng.lng]
-    const updatedPolygon = [...currentPolygon, newPoint]
-    setCurrentPolygon(updatedPolygon)
-    onPolygonChange(updatedPolygon)
+    try {
+      const newPoint = [latlng.lat, latlng.lng]
+      const updatedPolygon = [...currentPolygon, newPoint]
+      setCurrentPolygon(updatedPolygon)
+      if (typeof onPolygonChange === 'function') {
+        onPolygonChange(updatedPolygon)
+      }
+    } catch (error) {
+      console.error('Error handling map click:', error)
+    }
   }
 
   const handleToggleDrawing = () => {
-    const newDrawingState = !isMapDrawing
-    setIsMapDrawing(newDrawingState)
-    onToggleDrawing(newDrawingState)
+    try {
+      const newDrawingState = !isMapDrawing
+      setIsMapDrawing(newDrawingState)
+      if (typeof onToggleDrawing === 'function') {
+        onToggleDrawing(newDrawingState)
+      }
+    } catch (error) {
+      console.error('Error toggling drawing:', error)
+    }
   }
 
   const clearPolygon = () => {
-    setCurrentPolygon([])
-    onPolygonChange([])
+    try {
+      setCurrentPolygon([])
+      if (typeof onPolygonChange === 'function') {
+        onPolygonChange([])
+      }
+    } catch (error) {
+      console.error('Error clearing polygon:', error)
+    }
   }
 
   const removeLastPoint = () => {
-    if (currentPolygon.length > 0) {
-      const updatedPolygon = currentPolygon.slice(0, -1)
-      setCurrentPolygon(updatedPolygon)
-      onPolygonChange(updatedPolygon)
+    try {
+      if (currentPolygon.length > 0) {
+        const updatedPolygon = currentPolygon.slice(0, -1)
+        setCurrentPolygon(updatedPolygon)
+        if (typeof onPolygonChange === 'function') {
+          onPolygonChange(updatedPolygon)
+        }
+      }
+    } catch (error) {
+      console.error('Error removing last point:', error)
     }
   }
 
   const addPointAtCenter = () => {
-    if (mapRef.current) {
-      const center = mapRef.current.getCenter()
-      const newPoint = [center.lat, center.lng]
-      const updatedPolygon = [...currentPolygon, newPoint]
-      setCurrentPolygon(updatedPolygon)
-      onPolygonChange(updatedPolygon)
+    try {
+      if (mapRef.current) {
+        const center = mapRef.current.getCenter()
+        if (center) {
+          const newPoint = [center.lat, center.lng]
+          const updatedPolygon = [...currentPolygon, newPoint]
+          setCurrentPolygon(updatedPolygon)
+          if (typeof onPolygonChange === 'function') {
+            onPolygonChange(updatedPolygon)
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error adding point at center:', error)
     }
   }
 
-  const polygonPositions = currentPolygon.map(point => [point[0], point[1]])
+  const polygonPositions = currentPolygon
+    .filter(point => Array.isArray(point) && point.length >= 2 && 
+      typeof point[0] === 'number' && typeof point[1] === 'number')
+    .map(point => [point[0], point[1]])
 
   return (
     <div className="space-y-4">
@@ -174,11 +218,21 @@ export const GeofenceMap = ({
             style={{ height: '100%', width: '100%' }}
             ref={mapRef}
             whenReady={() => {
-              if (mapRef.current) {
-                mapRef.current.on('moveend', () => {
-                  const center = mapRef.current.getCenter()
-                  onCenterChange([center.lat, center.lng])
-                })
+              try {
+                if (mapRef.current) {
+                  mapRef.current.on('moveend', () => {
+                    try {
+                      const center = mapRef.current.getCenter()
+                      if (center && typeof onCenterChange === 'function') {
+                        onCenterChange([center.lat, center.lng])
+                      }
+                    } catch (error) {
+                      console.error('Error handling map move:', error)
+                    }
+                  })
+                }
+              } catch (error) {
+                console.error('Error in map ready handler:', error)
               }
             }}
           >
