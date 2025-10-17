@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import toast from 'react-hot-toast'
+import { electronAPI } from '../utils/electronAPI'
 
 export const useGeofenceStore = create(
   persist(
@@ -13,7 +14,7 @@ export const useGeofenceStore = create(
       loadGeofences: async () => {
         set({ isLoading: true })
         try {
-          const data = await window.electronAPI.getGeofences()
+          const data = await electronAPI.getGeofences()
           set({
             geofences: data.geofences || [],
             alerts: data.alerts || [],
@@ -29,7 +30,7 @@ export const useGeofenceStore = create(
       saveGeofences: async () => {
         const { geofences, alerts } = get()
         try {
-          const success = await window.electronAPI.saveGeofences({
+          const success = await electronAPI.saveGeofences({
             geofences,
             alerts,
           })
@@ -96,7 +97,7 @@ export const useGeofenceStore = create(
         get().saveGeofences()
         
         // Show notification
-        window.electronAPI.showNotification(
+        electronAPI.showNotification(
           `Geofence ${alertData.type === 'enter' ? 'Enter' : 'Exit'}`,
           alertData.message
         )

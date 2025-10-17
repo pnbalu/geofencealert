@@ -5,6 +5,7 @@ import { MapPin, Settings, Bell, Activity, Plus } from 'lucide-react'
 
 import { useGeofenceStore } from './stores/geofenceStore'
 import { useLocationStore } from './stores/locationStore'
+import { electronAPI } from './utils/electronAPI'
 import { GeofenceManager } from './components/GeofenceManager'
 import { LocationTracker } from './components/LocationTracker'
 import { AlertHistory } from './components/AlertHistory'
@@ -25,7 +26,7 @@ function App() {
     loadGeofences()
     
     // Request location permission
-    window.electronAPI.requestLocationPermission()
+    electronAPI.requestLocationPermission()
   }, [loadGeofences])
 
   const tabs = [

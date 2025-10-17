@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { electronAPI } from '../utils/electronAPI'
 
 export const useLocationStore = create((set, get) => ({
   currentLocation: null,
@@ -19,7 +20,7 @@ export const useLocationStore = create((set, get) => ({
     // Start new tracking interval (every 5 seconds)
     const interval = setInterval(async () => {
       try {
-        const location = await window.electronAPI.getCurrentLocation()
+        const location = await electronAPI.getCurrentLocation()
         if (location) {
           get().updateLocation(location)
         }
@@ -67,7 +68,7 @@ export const useLocationStore = create((set, get) => ({
     // Set new interval
     const newInterval = setInterval(async () => {
       try {
-        const location = await window.electronAPI.getCurrentLocation()
+        const location = await electronAPI.getCurrentLocation()
         if (location) {
           get().updateLocation(location)
         }
