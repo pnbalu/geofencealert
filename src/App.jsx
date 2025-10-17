@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MapPin, Settings, Bell, Activity, Plus } from 'lucide-react'
+import { MapPin, Settings, Bell, Activity, Plus, Users } from 'lucide-react'
 
 import { useGeofenceStore } from './stores/geofenceStore'
 import { useLocationStore } from './stores/locationStore'
+import { useUserStore } from './stores/userStore'
 import { electronAPI } from './utils/electronAPI'
 import { GeofenceManager } from './components/GeofenceManager'
 import { LocationTracker } from './components/LocationTracker'
@@ -13,6 +14,7 @@ import { SettingsPanel } from './components/SettingsPanel'
 import { Header } from './components/Header'
 import { Sidebar } from './components/Sidebar'
 import { Dashboard } from './components/Dashboard'
+import { UserManager } from './components/UserManager'
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -20,18 +22,21 @@ function App() {
   
   const { loadGeofences } = useGeofenceStore()
   const { startTracking, stopTracking, isTracking } = useLocationStore()
+  const { loadUsers } = useUserStore()
 
   useEffect(() => {
     // Load initial data
     loadGeofences()
+    loadUsers()
     
     // Request location permission
     electronAPI.requestLocationPermission()
-  }, [loadGeofences])
+  }, [loadGeofences, loadUsers])
 
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: Activity },
     { id: 'geofences', label: 'Geofences', icon: MapPin },
+    { id: 'users', label: 'Users', icon: Users },
     { id: 'alerts', label: 'Alerts', icon: Bell },
     { id: 'settings', label: 'Settings', icon: Settings },
   ]
@@ -42,6 +47,8 @@ function App() {
         return <Dashboard />
       case 'geofences':
         return <GeofenceManager />
+      case 'users':
+        return <UserManager />
       case 'alerts':
         return <AlertHistory />
       case 'settings':

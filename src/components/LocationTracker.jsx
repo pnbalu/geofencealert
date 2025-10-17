@@ -14,14 +14,26 @@ export const LocationTracker = () => {
       geofences.forEach(geofence => {
         if (!geofence.enabled) return
 
-        const distance = calculateDistance(
-          currentLocation.latitude,
-          currentLocation.longitude,
-          geofence.latitude,
-          geofence.longitude
-        )
+        let isInside = false
 
-        const isInside = distance <= geofence.radius
+        // Check if geofence is polygon-based
+        if (geofence.shape === 'polygon' && geofence.polygon && geofence.polygon.length >= 3) {
+          isInside = isPointInPolygon(
+            currentLocation.latitude,
+            currentLocation.longitude,
+            geofence.polygon
+          )
+        } else {
+          // Fallback to circular geofence
+          const distance = calculateDistance(
+            currentLocation.latitude,
+            currentLocation.longitude,
+            geofence.latitude,
+            geofence.longitude
+          )
+          isInside = distance <= geofence.radius
+        }
+
         const wasInside = geofence.lastInside || false
 
         // Check for enter/exit events
@@ -60,6 +72,22 @@ export const LocationTracker = () => {
   }, [currentLocation, isTracking, geofences, addAlert])
 
   return null // This component doesn't render anything, it just handles logic
+}
+
+// Point-in-polygon algorithm using ray casting
+function isPointInPolygon(lat, lon, polygon) {
+  let inside = false
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i].longitude
+    const yi = polygon[i].latitude
+    const xj = polygon[j].longitude
+    const yj = polygon[j].latitude
+
+    if (((yi > lat) !== (yj > lat)) && (lon < (xj - xi) * (lat - yi) / (yj - yi) + xi)) {
+      inside = !inside
+    }
+  }
+  return inside
 }
 
 // Haversine formula to calculate distance between two points

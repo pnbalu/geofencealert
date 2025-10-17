@@ -53,6 +53,7 @@ app.on('window-all-closed', () => {
 
 // IPC handlers for geofence operations
 const dataPath = join(app.getPath('userData'), 'geofence-data.json')
+const userDataPath = join(app.getPath('userData'), 'user-data.json')
 
 ipcMain.handle('get-geofences', () => {
   try {
@@ -111,5 +112,29 @@ ipcMain.handle('get-current-location', async () => {
   } catch (error) {
     console.error('Error getting current location:', error)
     return null
+  }
+})
+
+// IPC handlers for user operations
+ipcMain.handle('get-users', () => {
+  try {
+    if (existsSync(userDataPath)) {
+      const data = readFileSync(userDataPath, 'utf-8')
+      return JSON.parse(data)
+    }
+    return { users: [], currentUser: null }
+  } catch (error) {
+    console.error('Error reading user data:', error)
+    return { users: [], currentUser: null }
+  }
+})
+
+ipcMain.handle('save-users', (_, data) => {
+  try {
+    writeFileSync(userDataPath, JSON.stringify(data, null, 2))
+    return true
+  } catch (error) {
+    console.error('Error saving user data:', error)
+    return false
   }
 })

@@ -240,9 +240,15 @@ export const Dashboard = () => {
                 <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
                   {geofence.type.charAt(0).toUpperCase() + geofence.type.slice(1)}
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-500">
-                  Radius: {geofence.radius}m
-                </p>
+                {geofence.shape === 'polygon' && geofence.polygon ? (
+                  <p className="text-xs text-slate-500 dark:text-slate-500">
+                    {geofence.polygon.length} vertices
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-500 dark:text-slate-500">
+                    Radius: {geofence.radius}m
+                  </p>
+                )}
               </motion.div>
             ))}
           </div>

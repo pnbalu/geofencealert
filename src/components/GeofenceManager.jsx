@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Edit, Trash2, MapPin, ToggleLeft, ToggleRight } from 'lucide-react'
 import { useGeofenceStore } from '../stores/geofenceStore'
+import { useUserStore } from '../stores/userStore'
 import { GeofenceForm } from './GeofenceForm'
 import { GEOFENCE_TYPES } from '../constants'
 import { formatDistanceToNow } from 'date-fns'
 
 export const GeofenceManager = () => {
   const { geofences, deleteGeofence, toggleGeofence, selectGeofence, selectedGeofence } = useGeofenceStore()
+  const { users } = useUserStore()
   const [showForm, setShowForm] = useState(false)
   const [editingGeofence, setEditingGeofence] = useState(null)
 
@@ -19,6 +21,13 @@ export const GeofenceManager = () => {
   const handleCloseForm = () => {
     setShowForm(false)
     setEditingGeofence(null)
+  }
+
+  const getAssignedUsers = (geofence) => {
+    if (!geofence.assignedUsers) return []
+    return geofence.assignedUsers.map(userId => 
+      users.find(user => user.id === userId)
+    ).filter(Boolean)
   }
 
   const getGeofenceType = (type) => {
@@ -105,23 +114,77 @@ export const GeofenceManager = () => {
                 {/* Details */}
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 dark:text-slate-400">Location:</span>
-                    <span className="font-mono text-slate-900 dark:text-slate-100">
-                      {geofence.latitude.toFixed(4)}, {geofence.longitude.toFixed(4)}
+                    <span className="text-slate-500 dark:text-slate-400">Shape:</span>
+                    <span className="text-slate-900 dark:text-slate-100 capitalize">
+                      {geofence.shape || 'polygon'}
                     </span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-500 dark:text-slate-400">Radius:</span>
-                    <span className="font-mono text-slate-900 dark:text-slate-100">
-                      {geofence.radius}m
-                    </span>
-                  </div>
+                  {geofence.shape === 'polygon' && geofence.polygon ? (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500 dark:text-slate-400">Points:</span>
+                      <span className="text-slate-900 dark:text-slate-100">
+                        {geofence.polygon.length} vertices
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500 dark:text-slate-400">Radius:</span>
+                      <span className="font-mono text-slate-900 dark:text-slate-100">
+                        {geofence.radius}m
+                      </span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500 dark:text-slate-400">Created:</span>
                     <span className="text-slate-900 dark:text-slate-100">
                       {formatDistanceToNow(new Date(geofence.createdAt), { addSuffix: true })}
                     </span>
                   </div>
+                </div>
+
+                {/* Assigned Users */}
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                      Assigned Users
+                    </span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                      {getAssignedUsers(geofence).length} users
+                    </span>
+                  </div>
+                  
+                  {getAssignedUsers(geofence).length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {getAssignedUsers(geofence).slice(0, 3).map((user) => (
+                        <div
+                          key={user.id}
+                          className="flex items-center space-x-2 bg-slate-100 dark:bg-slate-800 rounded-full px-3 py-1"
+                        >
+                          <div className="w-6 h-6 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
+                            <span className="text-white font-bold text-xs">
+                              {user.name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                          <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                            {user.name}
+                          </span>
+                        </div>
+                      ))}
+                      {getAssignedUsers(geofence).length > 3 && (
+                        <div className="flex items-center bg-slate-200 dark:bg-slate-700 rounded-full px-3 py-1">
+                          <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
+                            +{getAssignedUsers(geofence).length - 3} more
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                      <span className="text-xs text-slate-500 dark:text-slate-400">
+                        No users assigned
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Status */}

@@ -47,5 +47,21 @@ export const electronAPI = {
       }
     }
     return window.electronAPI.getCurrentLocation()
+  },
+
+  async getUsers() {
+    if (!this.isAvailable) {
+      console.warn('electronAPI not available, returning empty users')
+      return { users: [], currentUser: null }
+    }
+    return window.electronAPI.getUsers()
+  },
+
+  async saveUsers(data) {
+    if (!this.isAvailable) {
+      console.warn('electronAPI not available, skipping user save')
+      return true
+    }
+    return window.electronAPI.saveUsers(data)
   }
 }
