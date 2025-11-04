@@ -1,72 +1,23 @@
 {
   "name": "geofence-alert",
   "version": "1.0.0",
-  "description": "A modern desktop application for geofence monitoring and alerts",
-  "type": "module",
-  "main": "dist/main.js",
+  "description": "Geofence Alert multi-platform application",
+  "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev:renderer\" \"npm run dev:main\"",
-    "dev:renderer": "vite",
-    "dev:main": "electron dist/main.js",
-    "build": "npm run build:renderer && npm run build:main",
-    "build:renderer": "vite build",
-    "build:main": "node scripts/build-main.js",
-    "dist": "npm run build && electron-builder",
-    "dist:win": "npm run build && electron-builder --win",
-    "dist:mac": "npm run build && electron-builder --mac",
-    "dist:linux": "npm run build && electron-builder --linux"
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "dist": "cd frontend && npm run dist",
+    "install:frontend": "cd frontend && npm install"
   },
   "keywords": [
     "geofence",
     "location",
     "tracking",
     "alerts",
-    "desktop"
+    "desktop",
+    "mobile"
   ],
   "author": "Geofence Alert Team",
-  "license": "MIT",
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.1",
-    "concurrently": "^8.2.2",
-    "electron": "^28.1.0",
-    "electron-builder": "^24.9.1",
-    "vite": "^5.0.10"
-  },
-  "dependencies": {
-    "autoprefixer": "^10.4.16",
-    "date-fns": "^3.0.6",
-    "framer-motion": "^10.16.16",
-    "leaflet": "^1.9.4",
-    "lucide-react": "^0.303.0",
-    "postcss": "^8.4.32",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-hot-toast": "^2.4.1",
-    "react-leaflet": "^4.2.1",
-    "tailwindcss": "^3.4.0",
-    "zustand": "^4.5.7"
-  },
-  "build": {
-    "appId": "com.geofencealert.app",
-    "productName": "Geofence Alert",
-    "directories": {
-      "output": "release"
-    },
-    "files": [
-      "dist/**/*",
-      "node_modules/**/*"
-    ],
-    "win": {
-      "target": "nsis",
-      "icon": "assets/icon.ico"
-    },
-    "mac": {
-      "target": "dmg",
-      "icon": "assets/icon.icns"
-    },
-    "linux": {
-      "target": "AppImage",
-      "icon": "assets/icon.png"
-    }
-  }
+  "license": "MIT"
 }
+

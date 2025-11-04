@@ -8,6 +8,9 @@ yarn-error.log*
 dist/
 release/
 build/
+frontend/dist/
+frontend/release/
+frontend/build/
 
 # Environment variables
 .env
@@ -15,6 +18,8 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
+frontend/.env
+frontend/.env.local
 
 # IDE
 .vscode/
@@ -36,10 +41,8 @@ pids/
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbul
+# Coverage directory
 coverage/
-
-# nyc test coverage
 .nyc_output/
 
 # Dependency directories
@@ -63,3 +66,13 @@ out/
 # Temporary folders
 tmp/
 temp/
+
+# Frontend specific
+frontend/.vite/
+
+# Mobile (when added)
+mobile/node_modules/
+mobile/.expo/
+mobile/build/
+mobile/dist/
+

@@ -1,9 +1,32 @@
-# Geofence Alert Desktop Application
+# Geofence Alert - Multi-Platform Application
 
-A modern desktop application for monitoring geofences and tracking location-based alerts. Built with Electron, React, TypeScript, and Tailwind CSS.
+A comprehensive geofence monitoring and alert system with desktop and mobile applications. Built with Electron, React, and modern web technologies.
+
+## Project Structure
+
+```
+geofencealert/
+├── frontend/              # Desktop Electron Application
+│   ├── src/               # Source code
+│   ├── dist/              # Built application
+│   ├── package.json       # Dependencies and scripts
+│   └── README.md          # Frontend documentation
+├── mobile/                # Mobile Application (Coming Soon)
+│   └── README.md          # Mobile documentation
+├── README.md              # This file - Project overview
+├── QUICKSTART.md          # Quick setup guide
+├── SETUP.md               # Detailed setup instructions
+├── TROUBLESHOOTING.md     # Common issues and solutions
+└── MIGRATION.md           # Project restructuring guide
+```
+
+> **Note**: This project has been restructured! If you're upgrading from an older version, see [MIGRATION.md](./MIGRATION.md) for details.
 
 ## Features
 
+- 🔐 **Authentication System**: Secure login with role-based access control (Admin only for desktop app)
+- 🏢 **Organization Management**: Multi-organization support with user assignments
+- 👥 **User Management**: Invite users with auto-generated passwords and first-time password change
 - 🗺️ **Geofence Management**: Create, edit, and delete geofences with different types (Factory, School, Construction, Custom)
 - 📍 **Real-time Location Tracking**: Monitor your current location with configurable update intervals
 - 🔔 **Smart Alerts**: Get notified when entering or exiting geofenced areas
@@ -21,19 +44,26 @@ A modern desktop application for monitoring geofences and tracking location-base
 
 ## Technology Stack
 
-- **Frontend**: React 18 + TypeScript
-- **Desktop Framework**: Electron
+### Desktop Application (Frontend)
+- **Framework**: React 18 + JavaScript
+- **Desktop**: Electron
+- **Maps**: Leaflet with Google Maps or OpenStreetMap tiles (configurable via .env)
+- **Authentication**: Zustand with persistent storage
 - **Styling**: Tailwind CSS + Framer Motion
 - **State Management**: Zustand
 - **Build Tool**: Vite
 - **Icons**: Lucide React
 
-## Installation
+### Mobile Application
+- Coming soon
 
-1. Clone the repository:
+## Quick Start
+
+### Desktop Application (Frontend)
+
+1. Navigate to the frontend directory:
 ```bash
-git clone <repository-url>
-cd geofencealert
+cd frontend
 ```
 
 2. Install dependencies:
@@ -41,52 +71,122 @@ cd geofencealert
 npm install
 ```
 
-3. Start development server:
+3. Configure map provider (optional):
+   - Create a `.env` file in the `frontend` directory
+   - Add the following configuration:
+   ```
+   VITE_MAP_PROVIDER=google
+   VITE_GOOGLE_MAPS_API_KEY=your_api_key_here
+   ```
+   - Options for `VITE_MAP_PROVIDER`: `google` (default) or `openstreetmap`
+   - Default Google Maps API key: `AIzaSyC2dz15lOn8v9mFHT6YQ8bSi85WqRaK6oA`
+
+4. Start development server:
 ```bash
 npm run dev
 ```
 
+> **Note**: On first run, default admin credentials are `admin` / `Admin@123`. You must change the password on first login.
+
+### Mobile Application
+
+The mobile application is currently under development. See `mobile/README.md` for details.
+
 ## Building for Production
 
-### Build for all platforms:
+### Desktop Application
+
+Navigate to the frontend directory and run:
+
 ```bash
+cd frontend
+
+# Build for all platforms
 npm run dist
+
+# Build for specific platforms
+npm run dist:win    # Windows
+npm run dist:mac    # macOS
+npm run dist:linux  # Linux
 ```
 
-### Build for specific platforms:
-```bash
-# Windows
-npm run dist:win
+## Project Structure (Detailed)
 
-# macOS
-npm run dist:mac
-
-# Linux
-npm run dist:linux
-```
-
-## Project Structure
+### Frontend (Desktop Application)
 
 ```
-geofencealert/
+frontend/
 ├── src/
 │   ├── main/                 # Electron main process
-│   │   ├── main.ts          # Main process entry point
-│   │   └── preload.ts       # Preload script for secure IPC
+│   │   ├── main.js          # Main process entry point
+│   │   └── preload.cjs      # Preload script for secure IPC
 │   ├── components/          # React components
-│   │   ├── Dashboard.tsx    # Main dashboard view
-│   │   ├── GeofenceManager.tsx
-│   │   ├── AlertHistory.tsx
-│   │   ├── SettingsPanel.tsx
-│   │   └── ...
+│   │   ├── Dashboard.jsx    # Main dashboard view
+│   │   ├── Geofences.jsx    # Geofence management
+│   │   ├── AlertHistory.jsx # Alert history view
+│   │   ├── AlertConfiguration.jsx
+│   │   ├── Groups.jsx       # User group management
+│   │   ├── UserManager.jsx  # User management
+│   │   └── ...              # Other components
 │   ├── stores/              # Zustand state management
-│   │   ├── geofenceStore.ts
-│   │   └── locationStore.ts
-│   ├── types/               # TypeScript type definitions
-│   └── App.tsx              # Main React component
+│   │   ├── geofenceStore.js
+│   │   ├── locationStore.js
+│   │   ├── authStore.js
+│   │   └── ...              # Other stores
+│   ├── utils/               # Utility functions
+│   └── App.jsx              # Main React component
 ├── dist/                    # Built application
-└── release/                 # Packaged executables
+├── scripts/                 # Build scripts
+├── package.json             # Dependencies and scripts
+├── vite.config.js           # Vite configuration
+└── tailwind.config.js       # Tailwind CSS configuration
 ```
+
+### Mobile
+
+```
+mobile/
+├── README.md                # Mobile documentation
+└── (Coming soon...)        # Mobile app source code
+```
+
+## Authentication & First Time Setup
+
+### Initial Login
+
+**Default Credentials (First Launch Only):**
+- **Username:** `admin`
+- **Password:** `Admin@123`
+
+1. On first launch, the app will automatically create a default admin user
+2. Use the credentials above to log in
+3. You'll be prompted to change your password immediately
+4. Create a strong password (min 8 chars, uppercase, lowercase, number, special char)
+
+> **Important:** Change the default password immediately after first login for security!
+
+### Authentication Features
+
+- **Admin-Only Access**: Only users with "admin" role can access the desktop application
+- **Secure Password Storage**: Passwords are hashed before storage
+- **First-Time Password Change**: Invited users must change their password on first login
+- **Session Persistence**: Login state persists across app restarts
+- **Logout**: Use the logout button in the header to sign out
+
+### User Invitation
+
+To invite a new admin user:
+
+1. Navigate to Users page (after logging in)
+2. Click "Invite User" button
+3. Fill in user details:
+   - Name and Email (required)
+   - Role: Select "Administrator"
+   - Department: Select appropriate department
+4. Click "Send Invite"
+5. **Important**: Save the generated credentials shown
+6. Share credentials securely with the new user
+7. User must change password on first login
 
 ## Usage
 
@@ -129,7 +229,9 @@ Configure the application behavior in the "Settings" tab:
 - Node.js 18+ 
 - npm or yarn
 
-### Available Scripts
+### Available Scripts (Frontend)
+
+From the `frontend` directory:
 
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
@@ -140,7 +242,7 @@ Configure the application behavior in the "Settings" tab:
 ### Code Style
 
 The project uses:
-- TypeScript for type safety
+- JavaScript for desktop application
 - ESLint for code linting
 - Prettier for code formatting
 - Tailwind CSS for styling
